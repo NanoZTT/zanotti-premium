@@ -5,7 +5,6 @@
   <title>Bouton Image & Galerie Carousel Horizontal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ------ GLOBAL ------ */
     body {
       min-height: 100vh;
       background: #f5f5f5;
@@ -52,27 +51,33 @@
       flex-direction: column;
       justify-content: flex-end;
       background: #eee center/cover no-repeat;
-      transition: box-shadow 0.14s, transform 0.42s cubic-bezier(.44,0,.01,1.02);
-      will-change: transform;
       z-index: 1;
       opacity: 1;
       outline: none;
-      /* Remove browser focus rectangle */
+      padding: 0;
     }
     .image-btn:focus { outline: 2px solid #198ed6; }
-    .image-btn:hover, .image-btn:focus {
-      box-shadow: 0 18px 48px rgba(0,0,0,0.18);
-      transform: scale(1.045) rotateY(-7deg) translateY(-16px);
-      z-index: 5;
+    .btn-bg-zoom {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      transition: transform 0.47s cubic-bezier(.44,0,.01,1), filter 0.44s cubic-bezier(.44,0,.01,1.02);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      will-change: transform;
+    }
+    .image-btn:hover .btn-bg-zoom,
+    .image-btn:focus .btn-bg-zoom {
+      transform: scale(1.045);
+      filter: brightness(1.05) contrast(1.04);
     }
     .btn-overlay {
-      backdrop-filter: blur(2px);
-      background: rgba(15,15,25,0.30);
+      background: rgba(15,15,25,0.15);
       color: #fff;
-      padding: 28px 13px 40px 13px;
       text-align: center;
       width: 100%;
-      min-height: 110px;
+      min-height: 60px;
       position: relative;
       z-index: 2;
       display: flex;
@@ -80,41 +85,46 @@
       align-items: center;
       justify-content: flex-end;
       height: 100%;
+      pointer-events: none;
     }
     .btn-title {
-      font-size: 20px;
+      font-size: 1.23em;
       font-weight: 700;
-      margin-bottom: 0.2em;
       letter-spacing: 1px;
-    }
-    .btn-desc {
-      font-size: 1em;
-      color: #e0e0e6;
-      text-shadow: 0 2px 8px #12121a80;
-      line-height: 1.33;
+      color: #fff;
+      text-shadow: 0 2px 6px #2225;
+      margin: auto 0 12px 0;
+      padding: 0 1px 2px 1px;
+      background: rgba(0,0,0,0.11);
+      border-radius: 8px;
+      line-height: 1.2;
+      max-width: 94%;
+      white-space: pre-line;
+      pointer-events: auto;
+      position: relative;
+      z-index: 3;
     }
     .btn-plus-icon {
       position: absolute;
-      top: 14px;
-      right: 16px;
-      font-size: 2.1em;
-      color: #fff;
-      background: rgba(16,16,22,0.43);
-      border-radius: 50%;
-      padding: 0;
-      line-height: 0.85em;
-      width: 36px;
-      height: 36px;
+      top: 12px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none; /* pas cliquable, garde toute la zone activable */
-      box-shadow: 0 3px 12px 0 #0002, 0 1.5px 6px #0d0d188a;
-      z-index: 100;
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-weight: 600;
-      letter-spacing: 2px;
-      user-select: none;
+      pointer-events: none;
+      z-index: 110;
+      background: rgba(255,255,255,0.8);
+      border-radius: 50%;
+    }
+    .btn-plus-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #222;
+      stroke-width: 1.7;
+      fill: none;
+      opacity: 0.84;
     }
     .carousel-gallery-track li:nth-child(5) .image-btn {
       margin-right: -30%;
@@ -127,10 +137,11 @@
         max-width: 400px;
         height: 230px;
       }
-      .carousel-gallery-track { gap: 13px; padding: 0 7px;}
-      .btn-overlay { padding: 15px 4px 22px 4px; min-height: 63px;}
-      .btn-title { font-size: 1.12em;}
-      .btn-plus-icon { width:30px;height:30px;font-size:1.15em; top:7px;right:9px;}
+      .carousel-gallery-track { gap: 13px; padding: 0 7px; }
+      .btn-overlay { min-height: 40px;}
+      .btn-title { font-size: 1em;}
+      .btn-plus-icon { width:26px; height:26px; top:5px; right:6px;}
+      .btn-plus-icon svg { width:13px; height:13px;}
     }
     @media (max-width: 599px) {
       .carousel-gallery-track { gap: 8px; padding: 0 3px;}
@@ -140,15 +151,15 @@
         max-width: 100vw;
         height: 120px;
       }
-      .btn-plus-icon { width:24px;height:24px;font-size:1em; top:3px;right:4px;}
+      .btn-plus-icon { width:18px; height:18px; top:2px; right:2px;}
+      .btn-plus-icon svg { width:10px; height:10px;}
     }
     .carousel-gallery-container::-webkit-scrollbar {height: 12px;}
     .carousel-gallery-container::-webkit-scrollbar-thumb {
       background: #c9cbe2; border-radius: 14px;
     }
     .carousel-gallery-container { scrollbar-width: thin; scrollbar-color: #b8bce0 transparent;}
-
-    /* ------ POPUP ------ */
+    /* POPUP TESLA ANIMATION */
     .popup-overlay {
       position: fixed;
       inset: 0;
@@ -157,7 +168,7 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity .36s cubic-bezier(.42,0,.38,1.09);
+      transition: opacity .24s cubic-bezier(.42,0,.45,1.02);
     }
     .popup-overlay.active {
       display: flex;
@@ -174,57 +185,64 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: scale(.93) translateY(30px) rotateY(11deg);
-      animation: popupAppear .51s cubic-bezier(.44,0,.01,1.02) forwards;
+      overflow-y: auto;
       outline: none;
+      padding-bottom: 30px;
+      opacity: 0;
+      transform: scale(.98) translateY(40px) rotateY(10deg); /* Tesla-style start */
+      animation: teslaPopupIn .56s cubic-bezier(.44,0,.01,1.02) forwards;
+      will-change: opacity, transform;
     }
-    @keyframes popupAppear {
-      0% { opacity: 0; transform: scale(.93) translateY(30px) rotateY(11deg);}
-      88% { transform: scale(1.045) rotateY(-4deg);}
-      100% { opacity: 1; transform: scale(1) translateY(0) rotateY(0deg);}
+    @keyframes teslaPopupIn {
+      0% { opacity: 0; transform: scale(.98) translateY(40px) rotateY(10deg);}
+      85%{ opacity: 1; transform: scale(1.03) translateY(-5px) rotateY(-2deg);}
+      100%{ opacity: 1; transform: scale(1) translateY(0) rotateY(0deg);}
     }
     .close-btn {
       position: absolute;
       top: 11px;
       right: 22px;
-      font-size: 2.1em;
-      color: #434a57;
-      background: rgba(255,255,255,0.88);
-      border: none;
-      cursor: pointer;
-      z-index: 2;
-      font-weight: 700;
-      opacity: 0.93;
       width: 46px;
       height: 46px;
-      border-radius: 50%;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 3px 13px #0002;
-      transition: opacity .13s, background .16s;
-      text-align: center;
-      line-height: 1;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 2;
+      transition: opacity .15s, background .19s;
+      opacity: .96;
     }
-    .close-btn:hover { opacity: 1; background: #fdebed;}
+    .close-btn:hover { opacity: 1; background: #fff; }
+    .close-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: #222;
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.92;
+      pointer-events:none;
+    }
     .popup-section {
       width: 100%;
-      margin-bottom: 16px;
+      margin-bottom: 26px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
     .popup-img {
       width: 100%;
-      max-height: 420px;
+      max-height: 270px;
       object-fit: cover;
       border-radius: 24px 24px 0 0;
       margin-bottom: 0;
       background: #eee;
       display: block;
+      transition: none;
     }
     .popup-section .img-title {
       font-size: 2.1em;
@@ -240,7 +258,7 @@
       color: #43464a;
       max-width: 85%;
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 12px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -255,130 +273,185 @@
   </style>
 </head>
 <body>
-  <!-- Galerie horizontale en CAROUSEL -->
   <div class="carousel-gallery-container">
     <ul class="carousel-gallery-track">
       <li>
-        <button class="image-btn" style="background-image: url('https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=400&q=80');" 
-                data-gallery="0"
-                aria-label="Nature Sauvage">
+        <button class="image-btn" data-gallery="0" aria-label="Nature">
+          <div class="btn-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=400&q=80');"></div>
           <div class="btn-overlay">
-            <span class="btn-plus-icon" aria-hidden="true">+</span>
-            <div class="btn-title">Nature Sauvage</div>
-            <div class="btn-desc">Exploration des espaces naturels intacts et de leur force brute.</div>
+            <span class="btn-plus-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg>
+            </span>
+            <div class="btn-title">Nature</div>
           </div>
         </button>
       </li>
       <li>
-        <button class="image-btn" style="background-image: url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80');" 
-                data-gallery="1"
-                aria-label="Architecture Urbaine">
+        <button class="image-btn" data-gallery="1" aria-label="Urbain">
+          <div class="btn-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80');"></div>
           <div class="btn-overlay">
-            <span class="btn-plus-icon" aria-hidden="true">+</span>
-            <div class="btn-title">Architecture Urbaine</div>
-            <div class="btn-desc">Lignes, contrastes et perspectives de la ville moderne.</div>
+            <span class="btn-plus-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg>
+            </span>
+            <div class="btn-title">Urbain</div>
           </div>
         </button>
       </li>
       <li>
-        <button class="image-btn" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80');"
-                data-gallery="2"
-                aria-label="Chromatique">
+        <button class="image-btn" data-gallery="2" aria-label="Couleurs">
+          <div class="btn-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80');"></div>
           <div class="btn-overlay">
-            <span class="btn-plus-icon" aria-hidden="true">+</span>
-            <div class="btn-title">Chromatique</div>
-            <div class="btn-desc">Couleurs et formes qui invitent à l’imaginaire et au rêve.</div>
+            <span class="btn-plus-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg>
+            </span>
+            <div class="btn-title">Couleurs</div>
           </div>
         </button>
       </li>
       <li>
-        <button class="image-btn" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80');"
-                data-gallery="3"
-                aria-label="Portraits">
+        <button class="image-btn" data-gallery="3" aria-label="Portrait">
+          <div class="btn-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80');"></div>
           <div class="btn-overlay">
-            <span class="btn-plus-icon" aria-hidden="true">+</span>
-            <div class="btn-title">Portraits</div>
-            <div class="btn-desc">Regards, émotions et histoires humaines saisies sur le vif.</div>
+            <span class="btn-plus-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg>
+            </span>
+            <div class="btn-title">Portrait</div>
           </div>
         </button>
       </li>
       <li>
-        <button class="image-btn" style="background-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80');"
-                data-gallery="4"
-                aria-label="Graphisme Abstrait">
+        <button class="image-btn" data-gallery="4" aria-label="Abstrait">
+          <div class="btn-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=400&q=80');"></div>
           <div class="btn-overlay">
-            <span class="btn-plus-icon" aria-hidden="true">+</span>
-            <div class="btn-title">Graphisme Abstrait</div>
-            <div class="btn-desc">Jeux d’abstraction et de contraste pour stimuler la créativité.</div>
+            <span class="btn-plus-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20"><line x1="10" y1="4" x2="10" y2="16"/><line x1="4" y1="10" x2="16" y2="10"/></svg>
+            </span>
+            <div class="btn-title">Abstrait</div>
           </div>
         </button>
       </li>
     </ul>
   </div>
-
-  <!-- POPUP OVERLAY GÉNÉRIQUE -->
   <div class="popup-overlay" id="popup-overlay" tabindex="-1">
     <div class="popup-content" id="popup-content">
       <button class="close-btn" id="close-popup-btn" aria-label="Fermer">
-        <span aria-hidden="true">&times;</span>
+        <svg viewBox="0 0 20 20"><line x1="5" y1="5" x2="15" y2="15"/><line x1="5" y1="15" x2="15" y2="5"/></svg>
       </button>
-      <div class="popup-section" id="popup-section">
-        <img class="popup-img" id="popup-img" src="" alt="">
-        <div class="img-title" id="popup-title"></div>
-        <div class="img-desc" id="popup-desc"></div>
-      </div>
+      <div id="popup-allsections"></div>
     </div>
   </div>
-
   <script>
-    // Liste des contenus pour chaque popup du carousel
-    const galleryData = [
-      {
-        title: "La Nature Sauvage",
-        desc: "Découvrez la force et la beauté de la nature à l’état brut avec cette photographie immersive.",
-        img: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        title: "Ligne urbaine",
-        desc: "L’urbanisme moderne, ses contrastes et ses courbes fascinantes, capturés dans un seul regard.",
-        img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        title: "Rêve Chromatique",
-        desc: "Un spectre de couleurs et d’émotions qui invite au voyage, entre imaginaire et réalité.",
-        img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        title: "Portraits",
-        desc: "Regards, émotions et histoires humaines saisies sur le vif.",
-        img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        title: "Graphisme Abstrait",
-        desc: "Jeux d’abstraction et de contraste pour stimuler la créativité.",
-        img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80"
-      }
+    const galleryPopups = [
+      [
+        {
+          img: "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80",
+          title: "La Nature Sauvage 1",
+          desc: "Découvrez la force et la beauté de la nature à l’état brut avec cette photographie immersive."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1444065381814-865dc9da92c0?auto=format&fit=crop&w=800&q=80",
+          title: "Forêt Mystique 2",
+          desc: "Une forêt dense, enveloppée de brume, invite à la contemplation et à l'aventure."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80",
+          title: "Cascade Cachée 3",
+          desc: "Un endroit secret où l’eau et la roche dialoguent en harmonie parfaite."
+        }
+      ],
+      [
+        {
+          img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80",
+          title: "Ligne urbaine 1",
+          desc: "L’urbanisme moderne, ses contrastes et ses courbes fascinantes, capturés dans un seul regard."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1468436139062-f60a71c5c892?auto=format&fit=crop&w=800&q=80",
+          title: "City Lights 2",
+          desc: "La ville scintille sans cesse, témoin d’une vie nocturne vibrante et électrique."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80",
+          title: "Architecture géométrique 3",
+          desc: "Des plans épurés et une perspective graphique inédite."
+        }
+      ],
+      [
+        {
+          img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+          title: "Rêve Chromatique 1",
+          desc: "Un spectre de couleurs et d’émotions qui invite au voyage, entre imaginaire et réalité."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80",
+          title: "Nuances Pastel 2",
+          desc: "Des teintes douces pour un instant suspendu."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1454023492550-5696f8ff10e1?auto=format&fit=crop&w=800&q=80",
+          title: "Soleil Graphique 3",
+          desc: "Un soleil stylisé illumine une palette éclatante de couleurs."
+        }
+      ],
+      [
+        {
+          img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80",
+          title: "Portraits 1",
+          desc: "Regards, émotions et histoires humaines saisies sur le vif."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1465101178521-c1a9136a1617?auto=format&fit=crop&w=800&q=80",
+          title: "Sourire du matin 2",
+          desc: "Un sourire sincère, capturé au lever du soleil."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
+          title: "Générations 3",
+          desc: "Portraits croisés illustrant la transmission et le lien familial."
+        }
+      ],
+      [
+        {
+          img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80",
+          title: "Graphisme Abstrait 1",
+          desc: "Jeux d’abstraction et de contraste pour stimuler la créativité."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1467987506553-8f3916508521?auto=format&fit=crop&w=800&q=80",
+          title: "Mosaïque Colorée 2",
+          desc: "Un kaléidoscope de formes et de couleurs."
+        },
+        {
+          img: "https://images.unsplash.com/photo-1453053507100-454ed9428b6e?auto=format&fit=crop&w=800&q=80",
+          title: "Minimal Line Art 3",
+          desc: "Lignes pures et espaces négatifs pour un esprit zen et design."
+        }
+      ]
     ];
 
     const popupOverlay = document.getElementById('popup-overlay');
     const closeBtn = document.getElementById('close-popup-btn');
-    const popupImg = document.getElementById('popup-img');
-    const popupTitle = document.getElementById('popup-title');
-    const popupDesc = document.getElementById('popup-desc');
-    const popupSection = document.getElementById('popup-section');
+    const popupAllSections = document.getElementById('popup-allsections');
     const popupContent = document.getElementById('popup-content');
 
     function openPopup(index) {
-      // Remplit les données
-      popupImg.src = galleryData[index].img;
-      popupImg.alt = galleryData[index].title;
-      popupTitle.textContent = galleryData[index].title;
-      popupDesc.textContent = galleryData[index].desc;
-      // Réinitialise/reproduit l'animation à chaque ouverture
+      popupAllSections.innerHTML = '';
+      galleryPopups[index].forEach(sec => {
+        const div = document.createElement("div");
+        div.className = "popup-section";
+        div.innerHTML = `
+          <img class="popup-img" src="${sec.img}" alt="${sec.title}">
+          <div class="img-title">${sec.title}</div>
+          <div class="img-desc">${sec.desc}</div>
+        `;
+        popupAllSections.appendChild(div);
+      });
       popupContent.style.animation = "none";
       popupContent.offsetHeight;
       popupContent.style.animation = null;
-      // Affiche le popup
+      popupContent.style.opacity = 0;
+      popupContent.style.transform = "scale(.98) translateY(40px) rotateY(10deg)";
+      popupContent.style.animation = "teslaPopupIn .56s cubic-bezier(.44,0,.01,1.02) forwards";
       popupOverlay.classList.add("active");
       document.body.style.overflow = "hidden";
       setTimeout(() => {popupOverlay.focus()}, 200);
