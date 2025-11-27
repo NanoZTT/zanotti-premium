@@ -2,9 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Bouton Image & Popup Multi</title>
+  <title>Bouton Image & Popup Tesla Carousel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <style>
+	/* ---------------- GLOBAL ---------------- */
 	body {
 	  min-height: 100vh;
 	  background: #f5f5f5;
@@ -14,6 +16,8 @@
 	  align-items: center;
 	  justify-content: center;
 	}
+
+	/* ---------------- IMAGE BUTTON ---------------- */
 	.image-btn {
 	  width: 300px;
 	  height: 600px;
@@ -32,18 +36,18 @@
 	.image-btn:hover {
 	  transform: scale(1.02);
 	}
+
 	.btn-overlay {
 	  backdrop-filter: blur(2px);
 	  background: rgba(15,15,25,0.33);
 	  color: #fff;
-	  padding: 32px 16px 50px 16px;
+	  padding: 32px 16px 50px;
 	  text-align: center;
-	  width: 100%;
 	}
 	.btn-title {
 	  font-size: 20px;
 	  font-weight: 700;
-	  margin-bottom: 0.25em;
+	  margin-bottom: .25em;
 	  letter-spacing: 1px;
 	}
 	.btn-desc {
@@ -53,7 +57,7 @@
 	  text-shadow: 0 2px 8px #12121a80;
 	}
 
-	/* Popup Overlay */
+	/* ---------------- POPUP ---------------- */
 	.popup-overlay {
 	  position: fixed;
 	  inset: 0;
@@ -66,6 +70,7 @@
 	.popup-overlay.active {
 	  display: flex;
 	}
+
 	.popup-content {
 	  width: 90vw;
 	  height: 90vh;
@@ -75,16 +80,16 @@
 	  display: flex;
 	  flex-direction: column;
 	  position: relative;
-	  padding: 0;
-	  overflow-y: auto;
-	  overflow-x: hidden;
-	  animation: popupAppear 0.38s cubic-bezier(.42,0,.38,1.09);
+	  overflow: hidden;
+	  animation: popupAppear .38s cubic-bezier(.42,0,.38,1.09);
 	}
+
 	@keyframes popupAppear {
 	  0% { opacity: 0; transform: scale(0.95);}
 	  90% { transform: scale(1.025);}
 	  100% { opacity: 1; transform: scale(1);}
 	}
+
 	.close-btn {
 	  position: absolute;
 	  top: 12px;
@@ -94,102 +99,161 @@
 	  background: none;
 	  border: none;
 	  cursor: pointer;
-	  z-index: 2;
-	  font-weight: 700;
-	  opacity: 0.77;
-	  transition: opacity 0.17s;
+	  z-index: 10;
+	  opacity: .77;
+	  transition: opacity .17s;
 	}
 	.close-btn:hover { opacity: 1; }
 
-	.popup-section {
+	/* ---------------- CARROUSEL TESLA STYLE ---------------- */
+	.carousel-container {
+	  position: relative;
 	  width: 100%;
-	  margin-bottom: 24px;
+	  height: 100%;
+	  overflow: hidden;
 	  display: flex;
 	  flex-direction: column;
-	  align-items: center;
-	}
-	.popup-img {
-	  width: 100%;
-	  max-height: 270px;
-	  object-fit: cover;
-	  border-radius: 24px 24px 0 0;
-	  margin-bottom: 0;
-	  background: #eee;
-	  display: block;
-	}
-	.popup-section .img-title {
-	  font-size: 2.1em;
-	  font-weight: 750;
-	  margin: 20px 0 10px 0;
-	  color: #171a20;
-	  letter-spacing: 1.2px;
-	  text-align: center;
-	}
-	.popup-section .img-desc {
-	  font-size: 1.09em;
-	  line-height: 1.4;
-	  color: #43464a;
-	  max-width: 85%;
-	  text-align: center;
-	  margin-bottom: 30px;
-	  margin-left: auto;
-	  margin-right: auto;
+	  background: #ffffff;
 	}
 
-	/* Responsive */
-	@media (max-width: 800px) {
-	  .popup-content { width: 98vw; height: 98vh; }
-	  .popup-img { max-height: 160px; }
-	  .image-btn { width: 98vw; height: 370px; }
-	  .btn-overlay { padding: 18px 7px 35px 7px; }
+	.carousel-track {
+	  display: flex;
+	  flex-direction: row;
+	  overflow-x: auto;
+	  scroll-snap-type: x mandatory;
+	  -webkit-overflow-scrolling: touch;
+	  gap: 20px;
+	  padding: 40px;
 	}
-	@media (max-width: 499px) {
-	  .popup-section .img-title { font-size: 1.3em;}
-	  .popup-img { max-height: 110px;}
+
+	.carousel-track::-webkit-scrollbar {
+	  display: none;
+	}
+
+	.carousel-item {
+	  flex: 0 0 80%;
+	  max-width: 80%;
+	  min-width: 80%;
+	  height: 75vh;
+	  border-radius: 20px;
+	  overflow: hidden;
+	  background: #eee;
+	  scroll-snap-align: center;
+	  box-shadow: 0 8px 26px rgba(0,0,0,0.12);
+	  display: flex;
+	  flex-direction: column;
+	}
+
+	.carousel-item img {
+	  width: 100%;
+	  height: 60%;
+	  object-fit: cover;
+	}
+
+	.carousel-item-title {
+	  font-size: 1.8em;
+	  font-weight: 700;
+	  margin: 16px 0 6px;
+	  text-align: center;
+	}
+
+	.carousel-item-desc {
+	  text-align: center;
+	  max-width: 80%;
+	  margin: 0 auto;
+	  font-size: 1.1em;
+	  color: #555;
+	}
+
+	/* ---------------- BOUTONS NAVIGATION ---------------- */
+	.carousel-btn {
+	  position: absolute;
+	  top: 50%;
+	  transform: translateY(-50%);
+	  width: 48px;
+	  height: 48px;
+	  border-radius: 50%;
+	  border: none;
+	  background: rgba(255, 255, 255, .8);
+	  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	  cursor: pointer;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: 1.4em;
+	  z-index: 20;
+	  transition: background .2s, transform .15s;
+	}
+
+	.carousel-btn:hover {
+	  background: rgba(255, 255, 255, 1);
+	  transform: translateY(-50%) scale(1.05);
+	}
+
+	.carousel-btn.prev { left: 14px; }
+	.carousel-btn.next { right: 14px; }
+
+	/* ---------------- RESPONSIVE ---------------- */
+	@media (max-width: 800px) {
+	  .carousel-item {
+		flex: 0 0 92%;
+		max-width: 92%;
+	  }
 	}
   </style>
 </head>
+
 <body>
-  <!-- Gros bouton image+texte -->
+  <!-- Gros bouton image -->
   <button class="image-btn" id="open-popup-btn">
 	<div class="btn-overlay">
 	  <div class="btn-title">Découvrir la galerie</div>
-	  <div class="btn-desc">
-		Cliquez ici pour explorer trois univers visuels riches en inspiration et en innovation.
-	  </div>
+	  <div class="btn-desc">Cliquez pour ouvrir un carrousel style Tesla.</div>
 	</div>
   </button>
-  
 
-  <!-- Popup fenêtre avec 3 images + textes -->
+  <!-- POPUP -->
   <div class="popup-overlay" id="popup-overlay">
 	<div class="popup-content">
-	  <button class="close-btn" id="close-popup-btn" aria-label="Fermer">&times;</button>
-	  
-	  <!-- Section 1 -->
-	  <div class="popup-section">
-		<img class="popup-img" src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=600&q=80" alt="Image 1">
-		<div class="img-title">La Nature Sauvage</div>
-		<div class="img-desc">Découvrez la force et la beauté de la nature à l’état brut avec cette photographie immersive.</div>
-	  </div>
+	  <button class="close-btn" id="close-popup-btn">&times;</button>
 
-	  <!-- Section 2 -->
-	  <div class="popup-section">
-		<img class="popup-img" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" alt="Image 2">
-		<div class="img-title">Ligne urbaine</div>
-		<div class="img-desc">L’urbanisme moderne, ses contrastes et ses courbes fascinantes, capturés dans un seul regard.</div>
-	  </div>
+	  <!-- CARROUSEL TESLA -->
+	  <div class="carousel-container">
+		
+		<button class="carousel-btn prev" id="carousel-prev">‹</button>
+		<button class="carousel-btn next" id="carousel-next">›</button>
 
-	  <!-- Section 3 -->
-	  <div class="popup-section">
-		<img class="popup-img" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Image 3">
-		<div class="img-title">Rêve Chromatique</div>
-		<div class="img-desc">Un spectre de couleurs et d’émotions qui invite au voyage, entre imaginaire et réalité.</div>
+		<div class="carousel-track" id="carousel-track">
+		  
+		  <!-- ITEM 1 -->
+		  <div class="carousel-item">
+			<img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=1000&q=80">
+			<div class="carousel-item-title">Nature Sauvage</div>
+			<div class="carousel-item-desc">Beauté brute, profonde, vivante.</div>
+		  </div>
+
+		  <!-- ITEM 2 -->
+		  <div class="carousel-item">
+			<img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1000&q=80">
+			<div class="carousel-item-title">Ligne Urbaine</div>
+			<div class="carousel-item-desc">Architecture moderne, lumière contrôlée.</div>
+		  </div>
+
+		  <!-- ITEM 3 -->
+		  <div class="carousel-item">
+			<img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80">
+			<div class="carousel-item-title">Rêve Chromatique</div>
+			<div class="carousel-item-desc">Couleurs, textures, émotions.</div>
+		  </div>
+
+		</div>
 	  </div>
 	</div>
   </div>
 
+
   <script>
+	/* ---- POPUP ---- */
 	const popupOverlay = document.getElementById('popup-overlay');
 	const openBtn = document.getElementById('open-popup-btn');
 	const closeBtn = document.getElementById('close-popup-btn');
@@ -208,12 +272,20 @@
 		document.body.style.overflow = '';
 	  }
 	});
-	document.addEventListener('keydown', e => {
-	  if (e.key === 'Escape') {
-		popupOverlay.classList.remove('active');
-		document.body.style.overflow = '';
-	  }
+
+	/* ---- CARROUSEL TESLA ---- */
+	const track = document.getElementById('carousel-track');
+	const prevBtn = document.getElementById('carousel-prev');
+	const nextBtn = document.getElementById('carousel-next');
+
+	nextBtn.addEventListener('click', () => {
+	  track.scrollBy({ left: window.innerWidth * 0.7, behavior: "smooth" });
+	});
+
+	prevBtn.addEventListener('click', () => {
+	  track.scrollBy({ left: -window.innerWidth * 0.7, behavior: "smooth" });
 	});
   </script>
+
 </body>
 </html>
