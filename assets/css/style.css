@@ -1,0 +1,117 @@
+/* Reset léger */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+	"Helvetica Neue", Arial, sans-serif;
+  background: radial-gradient(circle at top, #f5f5f7 0, #05060a 65%);
+  color: #f5f5f7;
+  text-rendering: optimizeLegibility;
+}
+
+/* Layout généraux */
+.zc-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px);
+  background: rgba(5, 6, 10, 0.84);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.zc-nav-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.zc-nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-size: 14px;
+}
+
+.zc-nav-logo img {
+  height: 26px;
+  width: auto;
+}
+
+.zc-nav-links {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+}
+
+.zc-nav-links a {
+  color: rgba(245, 245, 247, 0.86);
+  text-decoration: none;
+  padding: 4px 0;
+  position: relative;
+}
+
+.zc-nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #7cf6ff, #66a6ff);
+  transition: width 0.25s ease;
+}
+
+.zc-nav-links a:hover::after {
+  width: 100%;
+}
+
+.zc-nav-cta {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 233, 255, 0.7);
+  color: #e5f9ff;
+  text-decoration: none;
+  backdrop-filter: blur(18px);
+  background: linear-gradient(120deg, rgba(148, 233, 255, 0.16), transparent);
+}
+
+/* Hero */
+.zc-hero {
+  max-width: 1120px;
+  margin: 40px auto 60px;
+  padding: 40px 20px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2.3fr);
+  gap: 28px;
+  align-items: center;
+}
+
+.zc-hero-inner {
+  animation: heroFadeIn 0.9s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.zc-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255,
